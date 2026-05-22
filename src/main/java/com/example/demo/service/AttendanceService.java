@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Attendance;
 import com.example.demo.repository.AttendanceRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +10,9 @@ import org.springframework.stereotype.Service;
 public class AttendanceService {
 
     @Autowired
-    private AttendanceRepository attendanceRepo;
+    private AttendanceRepository attendanceRepository;
 
-    public String markAttendance(Attendance attendance) {
-        attendanceRepo.save(attendance);
-        return "Attendance Marked Successfully";
+    public Attendance save(Attendance attendance) {
+        return attendanceRepository.save(attendance);
     }
 }
