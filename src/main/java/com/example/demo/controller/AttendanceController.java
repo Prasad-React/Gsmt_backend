@@ -71,7 +71,11 @@ public class AttendanceController {
                     + destination.getAbsolutePath());
 
             // Save image
-            photo.transferTo(destination);
+System.out.println("STEP 1");
+
+photo.transferTo(destination);
+
+System.out.println("STEP 2");
 
             System.out.println("Image saved successfully");
 
