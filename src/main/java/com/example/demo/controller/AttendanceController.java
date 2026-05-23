@@ -32,51 +32,73 @@ public class AttendanceController {
 
         try {
 
-            // Absolute uploads path
+            System.out.println("===== ATTENDANCE API CALLED =====");
+
+            // Validation
+            if (photo == null || photo.isEmpty()) {
+
+                return ResponseEntity.badRequest()
+                        .body("Photo is missing");
+
+            }
+
+            // Render-safe temp directory
             String uploadDir =
-                    System.getProperty("user.dir")
+                    System.getProperty("java.io.tmpdir")
                     + File.separator
                     + "uploads";
 
             File dir = new File(uploadDir);
 
+            // Create uploads folder if not exists
             if (!dir.exists()) {
-                dir.mkdirs();
+
+                boolean created = dir.mkdirs();
+
+                System.out.println("Uploads folder created: " + created);
             }
 
-            // File name
+            // Unique file name
             String fileName =
                     System.currentTimeMillis()
                     + "_selfie.jpg";
 
-            // Full path
+            // Destination file
             File destination =
                     Paths.get(uploadDir, fileName).toFile();
+
+            System.out.println("Saving image to: "
+                    + destination.getAbsolutePath());
 
             // Save image
             photo.transferTo(destination);
 
-            // Save DB
+            System.out.println("Image saved successfully");
+
+            // Save attendance data
             Attendance attendance = new Attendance();
 
             attendance.setEmployeeId(employeeId);
             attendance.setStatus(status);
             attendance.setLatitude(latitude);
             attendance.setLongitude(longitude);
-
             attendance.setPhotoPath(fileName);
 
             Attendance saved =
                     attendanceService.save(attendance);
 
+            System.out.println("Attendance saved to DB");
+
             return ResponseEntity.ok(saved);
 
         } catch (Exception e) {
 
+            System.out.println("===== ERROR IN ATTENDANCE API =====");
+
             e.printStackTrace();
 
             return ResponseEntity.internalServerError()
-                    .body(e.getMessage());
+                    .body("Error: " + e.getMessage());
         }
     }
 }
