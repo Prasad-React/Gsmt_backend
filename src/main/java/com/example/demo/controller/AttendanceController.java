@@ -89,7 +89,8 @@ public class AttendanceController {
                     ObjectUtils.emptyMap()
             );
 
-            String imageUrl =
+
+                String imageUrl =
                     uploadResult.get("secure_url").toString();
             System.out.println("Image saved successfully");
 
