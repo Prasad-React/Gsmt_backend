@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.demo.entity.Attendance;
 import com.example.demo.service.AttendanceService;
 
@@ -10,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/attendance")
@@ -18,7 +22,15 @@ public class AttendanceController {
 
     @Autowired
     private AttendanceService attendanceService;
+    @Autowired
+    private Cloudinary cloudinary;
+    
+    @GetMapping("/all")
+    public List<Attendance> getAllAttendance() {
 
+        return attendanceService.getAllAttendance();
+    }
+    
     @PostMapping("/mark")
     public ResponseEntity<?> markAttendance(
 
@@ -71,8 +83,14 @@ public class AttendanceController {
                     + destination.getAbsolutePath());
 
             // Save image
-            photo.transferTo(destination);
+//            photo.transferTo(destination);
+            Map uploadResult = cloudinary.uploader().upload(
+                    photo.getBytes(),
+                    ObjectUtils.emptyMap()
+            );
 
+            String imageUrl =
+                    uploadResult.get("secure_url").toString();
             System.out.println("Image saved successfully");
 
             // Save attendance data
@@ -82,8 +100,9 @@ public class AttendanceController {
             attendance.setStatus(status);
             attendance.setLatitude(latitude);
             attendance.setLongitude(longitude);
-            attendance.setPhotoPath(fileName);
-
+//            attendance.setPhotoPath(fileName);
+            attendance.setPhotoPath(imageUrl);
+            
             Attendance saved =
                     attendanceService.save(attendance);
 
