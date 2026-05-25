@@ -13,7 +13,7 @@ public class CloudinaryConfig {
 
         return new Cloudinary(
                 ObjectUtils.asMap(
-                        "cloud_name", "Root",
+                        "cloud_name", "dt14hydgd",
                         "api_key", "844125252953251",
                         "api_secret", "oC-9HU-OvANierDePy0YBT4ond4",
                         "secure", true
